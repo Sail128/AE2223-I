@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from multiprocessing.dummy import Pool as ThreadPool
 # from tabulate import tabulate as tb
 
+
 def getFileList(parent_folder:str):
     dirs = os.listdir(parent_folder)
     FileList = {}
@@ -23,14 +24,19 @@ def L2error(setKey):
 
 def executeParallel(setKey, threads = 8):
     pool = ThreadPool(threads)
-    result = pool.map(L2error,dirnames)
+    result = pool.map(L2error,setKey)
     pool.close()
     pool.join()
     return setKey, result
 
 def main():
+<<<<<<< HEAD
     FileList = getFileList("Data")
     print(FileList)
+=======
+    print(tb(getFileList("Data")))
+    print("test")
+>>>>>>> e508911994e447a9d8efd9cc46a886a0eb91bbef
 
 
 if __name__ == "__main__":
