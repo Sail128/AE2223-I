@@ -1,5 +1,5 @@
 def general_plotter(
-    plots, 
+    plots,
     title:str=None,
     xlabel:str=None,
     xlim:tuple=None,
@@ -8,8 +8,8 @@ def general_plotter(
     ylim:tuple=None,
     yinvert:bool=False,
     grid:bool=False,
-    legend=False, 
-    fname:str=None, 
+    legend=False,
+    fname:str=None,
     dpi:int=200,
     figsize:tuple=None, #todo documentation
     tightlayout:bool=False,
@@ -28,7 +28,7 @@ def general_plotter(
                                                     marker:str (a valid marker style),
                                                     markersize:float,
                                                     linewidth:int}))]
-    
+
     Keyword Arguments:
         title {str} -- title displayed above the plot (default: {None})
         xlabel {str} -- label of the x-axis (default: {None})
@@ -48,7 +48,7 @@ def general_plotter(
         axhline {list} -- (y,{**kwargs}) a list of horizontal lines to be drawn into the diagram (default: {None})
     """
     from matplotlib import pyplot as plt
-    
+
     if figsize!=None:
         fig = plt.figure(figsize=figsize)
     else:
@@ -97,7 +97,7 @@ def general_plotter(
         plt.legend(loc=legend)
     else:
         if legend:
-            plt.legend(loc=0) 
+            plt.legend(loc=0)
     # draw framelines
     if framelines != None:
         ax = plt.gca()
@@ -113,12 +113,12 @@ def general_plotter(
     if tightlayout == True:
         fig.tight_layout()
     #save the figure with fname
-    if fname!=None: 
+    if fname!=None:
         plt.savefig(fname)
     else:
         if not show:
             print("Why do you want to create a graph that you don't save or show.\nThis is utterly useless")
-    if show: 
+    if show:
         plt.show()
     plt.close()
     return 1
@@ -127,10 +127,10 @@ if __name__ == "__main__":
     import numpy as np
     #should extent this example to show more of the capabilities
     x = np.arange(0, 5, 0.1)  
-    y = np.sin(x)  
+    y = np.sin(x)
     general_plotter( [
         (x,y,"test",{"style":"r.-.", "markersize":6.5}),
-        (x,y+1,"test",{"style":"gx-", "markersize":3})  
+        (x,y+1,"test",{"style":"gx-", "markersize":3})
     ],
     axvline=[(0.5,{"label":"test vline"})],
     axhline=[(1.5,{"label":"test hline","color":'red'})],
