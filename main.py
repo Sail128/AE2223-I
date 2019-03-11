@@ -28,8 +28,8 @@ def u_exact_calc(x,y):
     return u_exact_i, u_exact_j
 
 def f_exact_calc(x,y):
-    f_exact = -np.pi * np.pi * np.sin(np.pi*x) * np.sin(np.pi*y) - np.pi * np.pi * np.sin(np.pi*x) * np.sin(np.pi*y)
-    return f_exact
+    f_exact_i, f_exact_j = -np.pi * np.pi * np.sin(np.pi*x) * np.sin(np.pi*y)
+    return f_exact_i, f_exact_j
 
 def L2error(setKey):
     pass
