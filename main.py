@@ -27,7 +27,7 @@ def u_exact_calc(x,y):
     return u_exact
 
 def f_exact_calc(x,y):
-    f_exact = -np.pi * np.pi * np.sin(np.pi*x) * np.sin(np.pi*y) - np.pi *np.pi * np.sin(np.pi*x) * np.sin(np.pi*y)
+    f_exact = -np.pi * np.pi * np.sin(np.pi*x) * np.sin(np.pi*y) - np.pi * np.pi * np.sin(np.pi*x) * np.sin(np.pi*y)
     return f_exact
 def L2error(setKey):
     pass
