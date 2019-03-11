@@ -22,6 +22,13 @@ def phi_exact_calc(x,y):
     phi_exact = np.sin(np.pi*x) * np.sin(np.pi*y)
     return  phi_exact
 
+def u_exact_calc(x,y):
+    u_exact = np.pi * np.cos(np.pi*x) * np.sin(np.pi*y) + np.pi * np.sin(np.pi*x) * np.cos(np.pi*y)
+    return u_exact
+
+def f_exact_calc(x,y):
+    f_exact = -np.pi * np.pi * np.sin(np.pi*x) * np.sin(np.pi*y) - np.pi *np.pi * np.sin(np.pi*x) * np.sin(np.pi*y)
+    return f_exact
 def L2error(setKey):
     pass
 
@@ -36,6 +43,8 @@ def executeParallel(setKey, threads = 8):
 def main():
     FileList = getFileList("Data")
     print(FileList)
+
+
 
 if __name__ == "__main__":
     main()
