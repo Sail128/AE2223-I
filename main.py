@@ -16,6 +16,7 @@ def getFileList(parent_folder:str):
 
 def main():
     print(tb(getFileList("Data")))
+    print("hi")
 
 
 if __name__ == "__main__":
