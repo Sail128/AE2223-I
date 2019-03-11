@@ -34,13 +34,24 @@ def f_exact_calc(x,y):
 def L2error(setKey):
     # extensions = ["etaf","xif", "phi", "ux", "uy","w_h"]
     print(setKey)
+    key = setKey.split("/")[-1]
     xs = np.genfromtxt("{}_xif.dat".format(setKey))
     ys = np.genfromtxt("{}_etaf.dat".format(setKey))
     ux = np.genfromtxt("{}_ux.dat".format(setKey))
     uy = np.genfromtxt("{}_uy.dat".format(setKey))
     phi = np.genfromtxt("{}_phi.dat".format(setKey))
     w_h = np.genfromtxt("{}_w_h.dat".format(setKey))
-    print(xs.shape)
+    ymax, xmax = xs.shape
+    L2_phi = 0
+    L2_ux = 0
+    L2_uy = 0
+    for j in range(ymax):
+        for i in range(xmax):
+            u_ext_x, u_ext_y = u_exact_calc(xs[j,i], ys[j,i])
+            L2_phi += (phi[j,i] - phi_exact_calc(xs[j,i], ys[j,i]))*w_h[j,i]
+            L2_ux += (ux[j,i] - u_ext_x)*w_h[j,i]
+            L2_uy += (uy[j,i] - u_ext_y)*w_h[j,i]
+    return key, np.sqrt(L2_phi), np.sqrt(L2_ux+L2_uy)
 
 
 def executeParallel(setKeys, threads = 8):
@@ -55,7 +66,11 @@ def main():
     FileList = getFileList(parent_dir)
     print(FileList.keys())
     experiments = list(FileList.keys())
-    L2error("{}/{}/{}".format(parent_dir, experiments[0],FileList[experiments[0]][0]))
+    primal_primal = list(map(lambda x: "{}/{}/{}".format(parent_dir, experiments[2],x), FileList[experiments[2]]))
+    res_prim_prim = executeParallel(primal_primal)
+    for res in res_prim_prim:
+        pass
+
 
 
 
