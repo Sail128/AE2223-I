@@ -137,3 +137,11 @@ if __name__ == "__main__":
     framelines="lb",
     legend=True,
     figsize=(10,7))
+<<<<<<< HEAD
+=======
+
+def phi_exact_calc(x,y):
+    from math import pi as pi
+    phi_exact = np.sin(pi*x) * np.sin(pi*y)
+    return  phi_exact
+>>>>>>> 6cd555cdbf6c6c77f1d0497d09df2cb2e4512fa8
