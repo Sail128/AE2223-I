@@ -15,7 +15,7 @@ def getFileList(parent_folder:str):
             if file.endswith(".dat"):
                 keys = file.split("_")
                 sets.add("_".join(keys[0:4]))
-        FileList[dir] = sets
+        FileList[dir] = list(sets)
     return FileList
 
 def phi_exact_calc(x,y):
@@ -23,19 +23,30 @@ def phi_exact_calc(x,y):
     return  phi_exact
 
 def L2error(setKey):
-    pass
+    # extensions = ["etaf","xif", "phi", "ux", "uy","w_h"]
+    print(setKey)
+    xs = np.genfromtxt("{}_xif.dat".format(setKey))
+    ys = np.genfromtxt("{}_etaf.dat".format(setKey))
+    ux = np.genfromtxt("{}_ux.dat".format(setKey))
+    uy = np.genfromtxt("{}_uy.dat".format(setKey))
+    phi = np.genfromtxt("{}_phi.dat".format(setKey))
+    w_h = np.genfromtxt("{}_w_h.dat".format(setKey))
+    print(xs.shape)
 
 
-def executeParallel(setKey, threads = 8):
+def executeParallel(setKeys, threads = 8):
     pool = ThreadPool(threads)
-    result = pool.map(L2error,setKey)
+    result = pool.map(L2error,setKeys)
     pool.close()
     pool.join()
-    return setKey, result
+    return result
 
 def main():
-    FileList = getFileList("Data")
-    print(FileList)
+    parent_dir = "Data"
+    FileList = getFileList(parent_dir)
+    print(FileList.keys())
+    experiments = list(FileList.keys())
+    L2error("{}/{}/{}".format(parent_dir, experiments[0],FileList[experiments[0]][0]))
 
 if __name__ == "__main__":
     main()
