@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate as tb
 
+
 def getFileList(parent_folder:str):
     dirs = os.listdir(parent_folder)
     FileList = {}
