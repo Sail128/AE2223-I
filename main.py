@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import Pool as ThreadPool
 from tqdm import tqdm
-
+import warnings
 
 def getFileList(parent_folder: str):
     """finds all the relevant files which are required and cleans the names to be used in processing.
@@ -117,8 +117,19 @@ def L2error(setKey: str):
             L2_phi_abs += abs((phi_ext - phi[j, i]))*w_h[j, i]
             L2_ux_abs += abs((u_ext_x - ux[j, i]))*w_h[j, i]
             L2_uy_abs += abs((u_ext_y - uy[j, i]))*w_h[j, i]
-
-    return key, np.sqrt(L2_phi), np.sqrt(L2_ux+L2_uy), np.sqrt(L2_phi_sqr), np.sqrt(L2_ux_sqr+L2_uy_sqr), np.sqrt(L2_phi_abs), np.sqrt(L2_ux_abs+L2_uy_abs),
+        # This value can be >0 and throw a warning. This catches that warning and stops it from showing the value is set to nan
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            try: 
+                out_L_phi = np.sqrt(L2_phi)
+            except RuntimeWarning as rw:
+                out_L_phi = np.nan
+            try:
+                out_L_u = np.sqrt(L2_ux+L2_uy)
+            except RuntimeWarning as rw:
+                out_L_u = np.nan
+        
+    return key, out_L_phi, out_L_u, np.sqrt(L2_phi_sqr), np.sqrt(L2_ux_sqr+L2_uy_sqr), np.sqrt(L2_phi_abs), np.sqrt(L2_ux_abs+L2_uy_abs),
 
 
 def executeParallel(inputs, threadFunction, threads=8):
@@ -164,13 +175,13 @@ def main():
     # Get the list of experiments for each of the types as a dict with the keys being the experiment names
     FileList = getFileList(parent_dir)
     print(FileList.keys())
-    experiments = list(FileList.keys())[:1]
+    experiments = list(FileList.keys())
     print(experiments)
 
     for exp in experiments:
         # generate the map of inputs for calculating the error
         input_map = list(map(
-            (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp]))
+            (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp]))[:15]
         # calculte the error in a multithreaded way
         results = executeParallel(input_map, L2error) 
         # sort the returned map using K and N
