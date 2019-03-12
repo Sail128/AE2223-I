@@ -181,7 +181,7 @@ def main():
     for exp in experiments:
         # generate the map of inputs for calculating the error
         input_map = list(map(
-            (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp]))[:15]
+            (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp]))
         # calculte the error in a multithreaded way
         results = executeParallel(input_map, L2error) 
         # sort the returned map using K and N
