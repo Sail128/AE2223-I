@@ -137,8 +137,3 @@ if __name__ == "__main__":
     framelines="lb",
     legend=True,
     figsize=(10,7))
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 6cd555cdbf6c6c77f1d0497d09df2cb2e4512fa8
