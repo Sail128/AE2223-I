@@ -4,9 +4,11 @@ def general_plotter(
     xlabel:str=None,
     xlim:tuple=None,
     xinvert:bool=False,
+    xscale = None,
     ylabel:str=None,
     ylim:tuple=None,
     yinvert:bool=False,
+    yscale:str = None,
     grid:bool=False,
     legend=False,
     fname:str=None,
@@ -90,6 +92,8 @@ def general_plotter(
         plt.ylim(ylim)
     if yinvert:
         plt.gca().invert_yaxis()
+    if yscale != None:
+        plt.yscale(yscale)
     if grid:
         plt.grid()
     #setup legend
