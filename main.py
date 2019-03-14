@@ -172,6 +172,7 @@ def main():
     # Define the parent directory of the data to be processed.
     # Assumed structure is: parent_dir: exp_1,exp_2,...,exp_N (each containg the experiment files)
     parent_dir = "Data" 
+    c = "c0"
     # Get the list of experiments for each of the types as a dict with the keys being the experiment names
     FileList = getFileList(parent_dir)
     print(FileList.keys())
@@ -187,7 +188,7 @@ def main():
         # sort the returned map using K and N
         results.sort(key=sortfunction) 
         # opening an output file
-        output_file = open("{}_errors.dat".format(exp),
+        output_file = open("{}_errors_{}.dat".format(exp,c),
                            "w+")  
         # writing the header
         output_file.write(
