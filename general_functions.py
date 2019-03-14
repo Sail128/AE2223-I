@@ -86,6 +86,8 @@ def general_plotter(
         plt.xlim(xlim)
     if xinvert:
         plt.gca().invert_xaxis()
+    if xscale != None:
+        plt.xscale(xscale)
     if ylabel!=None:
         plt.ylabel(ylabel)
     if ylim != None:
