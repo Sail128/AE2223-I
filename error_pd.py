@@ -132,10 +132,6 @@ def L2error(setKey: str):
     relL1uy = np.sum(w_h*np.abs(uy_error))/np.sum(np.abs(uy_error))
 
     return [K, N, l2phi, relL2phi, l1phi, relL1phi, np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2), np.sqrt(l1ux**2+l1uy**2), np.sqrt(relL1ux**2+relL1uy**2)]
-    # return pd.DataFrame(
-    #     data=[K, N, l2phi, relL2phi, l1phi, relL1phi, np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2), np.sqrt(l1ux**2+l1uy**2), np.sqrt(relL1ux**2+relL1uy**2)], columns=["K", "N", "l2phi", "relL2phi", "l1phi", "relL1phi", "l2u", "relL2u", "l1u", "relL1u"]
-    #     )
-
 
 def executeParallel(inputs, threadFunction, threads=8):
     """Simple paralell execution setup, with progressbar

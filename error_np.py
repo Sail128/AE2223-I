@@ -83,14 +83,20 @@ def L2error(setKey: str):
         [tuple] -- the tuple of the results
     """
     # Get the specific key for the file in the style "K_#_N_#"
-    key = setKey.split("/")[-1]
+    key = setKey.split("/")[-1].split("_")
+    K = int(key[1])
+    N = int(key[3])
     # Get all the related files to start processing
     xs = np.genfromtxt("{}_xif.dat".format(setKey))
     ys = np.genfromtxt("{}_etaf.dat".format(setKey))
     ux = np.genfromtxt("{}_ux.dat".format(setKey))
     uy = np.genfromtxt("{}_uy.dat".format(setKey))
     phi = np.genfromtxt("{}_phi.dat".format(setKey))
-    w_h = np.genfromtxt("{}_w_h.dat".format(setKey))
+    try:
+        w_h = np.genfromtxt("{}_w_h.dat".format(setKey))
+    except OSError as e:
+        w_h = np.ones(xs.shape)
+    
 
     # calculate the error and norm of the error for Phi both the L1 and L2 norm and relative norm
     phi_exact = np.vectorize(
@@ -121,7 +127,7 @@ def L2error(setKey: str):
     l1uy = np.sum(w_h*np.abs(uy_error))
     relL1uy = np.sum(w_h*np.abs(uy_error))/np.sum(np.abs(uy_error))
 
-    return key, l2phi, relL2phi, l1phi, relL1phi, np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2), np.sqrt(l1ux**2+l1uy**2), np.sqrt(relL1ux**2+relL1uy**2)
+    return [K, N, l2phi, relL2phi, l1phi, relL1phi, np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2), np.sqrt(l1ux**2+l1uy**2), np.sqrt(relL1ux**2+relL1uy**2)]
 
 
 def executeParallel(inputs, threadFunction, threads=8):
@@ -186,10 +192,9 @@ def main():
             "#K,N,l2phi, relL2phi, l1phi, relL1phi, l2u, relL2u, l1u, relL1u \n")
         # write all the data to the file
         for line in results:
-            a, l2phi, relL2phi, l1phi, relL1phi, l2u, relL2u, l1u,relL1u = line
-            a = a.split("_")
+            K, N, l2phi, relL2phi, l1phi, relL1phi, l2u, relL2u, l1u,relL1u = line
             output_file.write("{},{},{},{},{},{},{},{},{},{}\n".format(
-                a[1], a[3], l2phi, relL2phi, l1phi, relL1phi, l2u, relL2u, l1u, relL1u))
+                K, N, l2phi, relL2phi, l1phi, relL1phi, l2u, relL2u, l1u, relL1u))
         # close the file
         output_file.close()
 
