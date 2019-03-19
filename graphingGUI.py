@@ -152,7 +152,7 @@ def plot(data, selection):
     for item in selection['datasets']:
         df = data[item]
         dfName = " ".join(item.split("_")[0:2])
-        c = ".".join(item.split("_")[3:]).replace("c", "")
+        c = ".".join(item.split("_")[3:]).replace("c", "").replace("C","")
         for line in lines:
             df[(df[series] == line)].plot(
                 x=selection["x-axis"],
