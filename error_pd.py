@@ -180,11 +180,10 @@ def sortfunction(x):
     return float(str(x[0])+"." + y[3])
 
 
-def main():
+def main(C):
     # Define the parent directory of the data to be processed.
     # Assumed structure is: parent_dir: exp_1,exp_2,...,exp_N (each containg the experiment files)
-    parent_dir = "Data/C0_3"
-    c = "c0_3"
+    parent_dir = "Data/{}".format(C)
     save_dir = "errors"
     # Get the list of experiments for each of the types as a dict with the keys being the experiment names
     FileList = getFileList(parent_dir)
@@ -195,11 +194,14 @@ def main():
         # generate the map of inputs for calculating the error
         input_map = list(map(
             (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp])) # remove slice to get everything
+        print("Starting analysis of experiment {}".format(exp))
+        print(input_map[0:3])
         # calculte the error in a multithreaded way
         results = executeParallel(input_map, L2error)
         # write to file
-        results.to_csv("{}/{}_errors_{}.dat".format(save_dir, exp, c),index=False)
+        results.to_csv("{}/{}_errors_{}.dat".format(save_dir, exp, C),index=False)
 
 
 if __name__ == "__main__":
-    main()
+    main("C0_0")
+    main("C0_3")
