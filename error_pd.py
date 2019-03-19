@@ -198,7 +198,7 @@ def main():
         # calculte the error in a multithreaded way
         results = executeParallel(input_map, L2error)
         # write to file
-        results.to_csv("{}/{}_errors_{}.dat".format(save_dir, exp, c))
+        results.to_csv("{}/{}_errors_{}.dat".format(save_dir, exp, c),index=False)
 
 
 if __name__ == "__main__":
