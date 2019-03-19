@@ -100,7 +100,6 @@ def L2error(setKey: str):
         w_h = np.genfromtxt("{}_w_h.dat".format(setKey))
     except OSError as e:
         w_h = np.ones(xs.shape)
-    
 
     # calculate the error and norm of the error for Phi both the L1 and L2 norm and relative norm
     phi_exact = np.vectorize(
@@ -133,6 +132,7 @@ def L2error(setKey: str):
 
     return [K, N, l2phi, relL2phi, l1phi, relL1phi, np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2), np.sqrt(l1ux**2+l1uy**2), np.sqrt(relL1ux**2+relL1uy**2)]
 
+
 def executeParallel(inputs, threadFunction, threads=8):
     """Simple paralell execution setup, with progressbar
 
@@ -154,8 +154,8 @@ def executeParallel(inputs, threadFunction, threads=8):
     # print(result)
     result = pd.DataFrame(
         data=result, columns=["K", "N", "l2phi", "relL2phi", "l1phi",
-                      "relL1phi", "l2u", "relL2u", "l1u", "relL1u"]
-        )
+                              "relL1phi", "l2u", "relL2u", "l1u", "relL1u"]
+    )
     # Sort the dataframe on element size and polynomial degree
     result.sort_values(["K", "N"], ascending=[True, True], inplace=True)
     result.reset_index(drop=True, inplace=True)
@@ -184,18 +184,19 @@ def main(C):
     # Get the list of experiments for each of the types as a dict with the keys being the experiment names
     FileList = getFileList(parent_dir)
     print(FileList.keys())
-    experiments = list(FileList.keys()) # remove slice to get full files
+    experiments = list(FileList.keys())  # remove slice to get full files
     print(experiments)
     for exp in experiments:
         # generate the map of inputs for calculating the error
         input_map = list(map(
-            (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp])) # remove slice to get everything
+            (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp]))  # remove slice to get everything
         print("Starting analysis of experiment {}".format(exp))
         print(input_map[0:3])
         # calculte the error in a multithreaded way
         results = executeParallel(input_map, L2error)
         # write to file
-        results.to_csv("{}/{}_errors_{}.dat".format(save_dir, exp, C),index=False)
+        results.to_csv(
+            "{}/{}_errors_{}.dat".format(save_dir, exp, C), index=False)
 
 
 if __name__ == "__main__":
