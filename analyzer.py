@@ -76,6 +76,12 @@ def main():
     data = pd.Panel(data=datapanel)
     print(data.shape)
     print(list(data.items))
+    print(data["primal_primal_errors_c0"][(data["primal_primal_errors_c0"]["K"]==1)])
+    data["primal_primal_errors_c0"][(data["primal_primal_errors_c0"]["K"]==1)].plot(x="N",y="relL2phi")
+    # plt.plot(data["primal_primal_errors_c0"][("K"==1)]["N","l2phi"])
+    plt.show()
+    plt.close()
+    
 
 if __name__ == "__main__":
     main()
