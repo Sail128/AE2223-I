@@ -42,6 +42,7 @@ questions = [
         'message': 'on the x-axis: ',
         'choices': [
             'N',
+            'h',
             'K'
         ]
     },

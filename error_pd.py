@@ -43,7 +43,7 @@ def phi_exact_calc(x: float, y: float):
     Returns:
         float -- potential
     """
-    phi_exact = np.sin(np.pi*x) * np.sin(np.pi*y)
+    phi_exact = np.sin(2*np.pi*x) * np.sin(2*np.pi*y)
     return phi_exact
 
 
@@ -57,17 +57,17 @@ def u_exact_calc(x: float, y: float):
     Returns:
         float -- ux, uy
     """
-    u_exact_i = np.pi * np.cos(np.pi*x) * np.sin(np.pi*y)
-    u_exact_j = np.pi * np.sin(np.pi*x) * np.cos(np.pi*y)
+    u_exact_i = 2*np.pi * np.cos(np.pi*x) * np.sin(np.pi*y)
+    u_exact_j = 2*np.pi * np.sin(np.pi*x) * np.cos(np.pi*y)
     return u_exact_i, u_exact_j
 
 
 def u_exact_x(x: float, y: float):
-    return np.pi * np.cos(np.pi*x) * np.sin(np.pi*y)
+    return 2*np.pi * np.cos(np.pi*x) * np.sin(np.pi*y)
 
 
 def u_exact_y(x: float, y: float):
-    return np.pi * np.sin(np.pi*x) * np.cos(np.pi*y)
+    return 2*np.pi * np.sin(np.pi*x) * np.cos(np.pi*y)
 
 
 def f_exact_calc(x: float, y: float):
@@ -90,6 +90,7 @@ def L2error(setKey: str):
     key = setKey.split("/")[-1].split("_")
     K = int(key[1])
     N = int(key[3])
+    h = 2/K
     # Get all the related files to start processing
     xs = np.genfromtxt("{}_xif.dat".format(setKey))
     ys = np.genfromtxt("{}_etaf.dat".format(setKey))
@@ -130,7 +131,7 @@ def L2error(setKey: str):
     l1uy = np.sum(w_h*np.abs(uy_error))
     relL1uy = np.sum(w_h*np.abs(uy_error))/np.sum(np.abs(uy_error))
 
-    return [K, N, l2phi, relL2phi, l1phi, relL1phi, np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2), np.sqrt(l1ux**2+l1uy**2), np.sqrt(relL1ux**2+relL1uy**2)]
+    return [K, N, h, l2phi, relL2phi, l1phi, relL1phi, np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2), np.sqrt(l1ux**2+l1uy**2), np.sqrt(relL1ux**2+relL1uy**2)]
 
 
 def executeParallel(inputs, threadFunction, threads=8):
@@ -153,11 +154,11 @@ def executeParallel(inputs, threadFunction, threads=8):
     pool.join()
     # print(result)
     result = pd.DataFrame(
-        data=result, columns=["K", "N", "l2phi", "relL2phi", "l1phi",
+        data=result, columns=["K", "N", "h", "l2phi", "relL2phi", "l1phi",
                               "relL1phi", "l2u", "relL2u", "l1u", "relL1u"]
     )
     # Sort the dataframe on element size and polynomial degree
-    result.sort_values(["K", "N"], ascending=[True, True], inplace=True)
+    result.sort_values(["h", "N"], ascending=[True, True], inplace=True)
     result.reset_index(drop=True, inplace=True)
     return result
 
@@ -184,7 +185,7 @@ def main(C):
     # Get the list of experiments for each of the types as a dict with the keys being the experiment names
     FileList = getFileList(parent_dir)
     print(FileList.keys())
-    experiments = list(FileList.keys())  # remove slice to get full files
+    experiments = list(FileList.keys()) # remove slice to get full files
     print(experiments)
     for exp in experiments:
         # generate the map of inputs for calculating the error
