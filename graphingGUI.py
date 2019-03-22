@@ -72,7 +72,7 @@ questions = [
         'type': 'input',
         'name': 'range',
         'message': 'What K range to plot (n-m): ',
-        'default': '1-20',
+        'default': '1-15',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'K'
     },
@@ -80,7 +80,7 @@ questions = [
         'type': 'input',
         'name': 'range',
         'message': 'What N range to plot (n-m): ',
-        'default': '2-20',
+        'default': '2-15',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'N'
     },
@@ -175,7 +175,7 @@ def plot(data, selection):
 
 
 def main():
-    parent_dir = "errors"
+    parent_dir = "test"
     infiles = []
     datapanel = {}
     for file in os.listdir(parent_dir):
