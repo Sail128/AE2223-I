@@ -232,7 +232,7 @@ def main():
         }, ])
         if not qexit['continue']:
             running = False
-            pprint(graphs)
+            pprint(graphs)#printing the graphs to be made used for better graphing
 
 if __name__ == "__main__":
     main()
