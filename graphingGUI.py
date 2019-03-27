@@ -10,6 +10,9 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 
+graphs = []
+
+
 class checkboxValidator(Validator):
     def validate(self, document):
         ok = len(document) != 0
@@ -179,7 +182,7 @@ def plot(data, selection):
                 marker=np.random.choice(markers)
             )
     x_range = selection['range'].split("-")
-    if selection["x-axis"] !="h":
+    if selection["x-axis"] != "h":
         plt.xlim(int(x_range[0]), int(x_range[1]))
     plt.rc('text', usetex=selection['use-tex'])
     plt.ylabel(selection['y-label'])
@@ -218,7 +221,7 @@ def main():
             pprint("Please select atleast one dataset")
             continue
         pprint(answers)
-
+        graphs.append(answers)
         plot(data, answers)
 
         qexit = prompt([{
@@ -229,7 +232,7 @@ def main():
         }, ])
         if not qexit['continue']:
             running = False
-
+            pprint(graphs)
 
 if __name__ == "__main__":
     main()
