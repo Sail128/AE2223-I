@@ -12,16 +12,7 @@ linestyles = [  "b-","bs-","bo-","b^-","b*-",
                 "c-","cs-","co-","c^-","c*-",
                 "m-","ms-","mo-","m^-","m*-",]
 
-
-def subset(arr, condition):
-    retlst = []
-    for a in arr:
-        if condition(a):
-            retlst.append(a)
-    return retlst
-
-
-def plot(datafile:str):
+def plot(data:pd.Panel):
     data = np.genfromtxt(datafile,delimiter=",")
     title = datafile.split(".")[0] + " phi"
     plots = []
@@ -78,9 +69,6 @@ def main():
     print(list(data.items))
     print(data["primal_primal_errors_c0"][(data["primal_primal_errors_c0"]["K"]==1)])
     data["primal_primal_errors_c0"][(data["primal_primal_errors_c0"]["K"]==1)].plot(x="N",y="relL2phi")
-    # plt.plot(data["primal_primal_errors_c0"][("K"==1)]["N","l2phi"])
-    plt.show()
-    plt.close()
     
 
 if __name__ == "__main__":
