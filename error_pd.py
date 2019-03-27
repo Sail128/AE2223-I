@@ -8,7 +8,7 @@ import pandas as pd
 from divergence import divergence
 from e_functions import *
 
-Testing = False
+Testing = True
 Plotting = False
 
 def getFileList(parent_folder: str):
@@ -95,41 +95,54 @@ def L2error(setKey: str):
     # relL1uy = np.sum(w_h*np.abs(uy_error))/np.sum(np.abs(uy_exact))
 
     # Calculate the error and norm for div(u)-f_exact. should be 0
-    dx = (np.abs(xs[0, 0]-xs[-1, -1]))/(xs.shape[0]-1)
-    dy = (np.abs(ys[0, 0]-ys[-1, -1]))/(ys.shape[1]-1)
+    dx = (np.abs(xs[0, 0]-xs[-1, -1]))/(xs.shape[0])
+    dy = (np.abs(ys[0, 0]-ys[-1, -1]))/(ys.shape[1])
     f_e = np.vectorize(f_exact)(xs,ys)
     divu = divergence([ux, uy], di=[dx,dy])
     Zero_error = divu-f_e
     l2divu_f = np.linalg.norm(Zero_error,ord=2)
+    x,y = Zero_error.shape
+    f=20 #croppingfactor what fraction to remove
+    dif_crop = Zero_error[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+    l2divu_f_cropped = np.linalg.norm(dif_crop,ord=2)
+    # x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+    # y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
     if Plotting:
         print(np.sum(Zero_error))
         print(l2divu_f)
-        print(divu)
-        print(f_e)
+        print(l2divu_f_cropped)
+        # print(divu)
+        # print(f_e)
     
     if Plotting:
         from matplotlib import pyplot as plt
         import matplotlib.cm as cm
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
+        ax1.set_title("divergence of u")
         map1 = ax1.contourf(xs, ys, divu, 50, cmap=cm.plasma)
         fig1.colorbar(map1)
         ax1.contour(xs, ys, divu, 10, colors='k',
                     linewidths=1, linestyles='solid')
-        ax1.quiver(xs, ys, ux, uy)
+        # ax1.quiver(xs, ys, ux, uy)
 
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
+        ax2.set_title("divu-f")
         map2 = ax2.contourf(xs, ys, Zero_error, 50, cmap=cm.plasma)
         fig2.colorbar(map2)
-        
-        fig3 = plt.figure()
-        ax3 = fig3.add_subplot(111)
-        map3 = ax3.contourf(xs, ys, divu, 50, cmap=cm.plasma)
-        fig3.colorbar(map3)
+
+        fig5 = plt.figure()
+        ax5 = fig5.add_subplot(111)
+        ax5.set_title("divu-f cropped")
+        x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+        y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+        map5 = ax5.contourf(x_crop, y_crop, dif_crop, 50, cmap=cm.plasma)
+        fig5.colorbar(map5)
 
         fig4 = plt.figure()
         ax4 = fig4.add_subplot(111)
+        ax4.set_title("f exact")
         map4 = ax4.contourf(xs, ys, f_e, 50, cmap=cm.plasma)
         fig4.colorbar(map4)
         plt.show()
@@ -226,7 +239,7 @@ def test(C):
         global Plotting
         Plotting=True
         #print(L2error("{}/{}/{}".format(parent_dir, experiments[0], FileList[experiments[0]][0])))
-        print(L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_10_N_5")))
+        print(L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_10_N_10")))
 
 if __name__ == "__main__":
     if Testing:
