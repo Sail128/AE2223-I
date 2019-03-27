@@ -63,6 +63,14 @@ questions = [
     {
         'type': 'input',
         'name': 'series',
+        'message': 'What N to plot (p,n-m): ',
+        'default': '2-5',
+        'validate': RangeValidator,
+        'when': lambda answers: answers['x-axis'] == 'h'
+    },
+    {
+        'type': 'input',
+        'name': 'series',
         'message': 'What K to plot (p,n-m): ',
         'default': '1-5',
         'validate': RangeValidator,
@@ -75,6 +83,14 @@ questions = [
         'default': '1-15',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'K'
+    },
+    {
+        'type': 'input',
+        'name': 'range',
+        'message': 'What K range to plot (n-m): ',
+        'default': '1-15',
+        'validate': RangeValidator,
+        'when': lambda answers: answers['x-axis'] == 'h'
     },
     {
         'type': 'input',
@@ -163,7 +179,8 @@ def plot(data, selection):
                 marker=np.random.choice(markers)
             )
     x_range = selection['range'].split("-")
-    plt.xlim(int(x_range[0]), int(x_range[1]))
+    if selection["x-axis"] !="h":
+        plt.xlim(int(x_range[0]), int(x_range[1]))
     plt.rc('text', usetex=selection['use-tex'])
     plt.ylabel(selection['y-label'])
     plt.yscale("log")
