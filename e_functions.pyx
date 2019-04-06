@@ -1,5 +1,5 @@
-import numpy as np
-
+# import numpy as np
+from math import sin, cos, pi
 
 def phi_exact(x: float, y: float):
     """calculates the exact potential
@@ -11,7 +11,7 @@ def phi_exact(x: float, y: float):
     Returns:
         float -- potential
     """
-    phi_exact = np.sin(2*np.pi*x) * np.sin(2*np.pi*y)
+    phi_exact = sin(2*pi*x) * sin(2*pi*y)
     return phi_exact
 
 
@@ -25,25 +25,25 @@ def u_exact_calc(x: float, y: float):
     Returns:
         float -- ux, uy
     """
-    u_exact_i = 2*np.pi * np.cos(2*np.pi*x) * np.sin(2*np.pi*y)
-    u_exact_j = 2*np.pi * np.sin(2*np.pi*x) * np.cos(2*np.pi*y)
+    u_exact_i = 2*pi * cos(2*pi*x) * sin(2*pi*y)
+    u_exact_j = 2*pi * sin(2*pi*x) * cos(2*pi*y)
     return u_exact_i, u_exact_j
 
 
 def u_exact_x(x: float, y: float):
-    return 2*np.pi * np.cos(2*np.pi*x) * np.sin(2*np.pi*y)
+    return 2*pi * cos(2*pi*x) * sin(2*pi*y)
 
 
 def dux_dx(x: float, y: float):
-    return -4*np.pi*np.pi*np.sin(2*np.pi*x) * np.sin(2*np.pi*y)
+    return -4*pi*pi*sin(2*pi*x) * sin(2*pi*y)
 
 
 def u_exact_y(x: float, y: float):
-    return 2*np.pi * np.sin(2*np.pi*x) * np.cos(2*np.pi*y)
+    return 2*pi * sin(2*pi*x) * cos(2*pi*y)
 
 
 def duy_dy(x: float, y: float):
-    return -4 * np.pi * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y)
+    return -4 * pi * pi * sin(2*pi*x) * sin(2*pi*y)
 
 
 def divu_exact(x: float, y: float):
@@ -51,4 +51,4 @@ def divu_exact(x: float, y: float):
 
 
 def f_exact(x: float, y: float):
-    return -8*np.pi * np.pi * np.sin(2*np.pi*x) * np.sin(2*np.pi*y)
+    return -8*pi * pi * sin(2*pi*x) * sin(2*pi*y)

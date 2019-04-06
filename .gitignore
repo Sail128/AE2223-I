@@ -7,3 +7,7 @@ test/__pycache__/*
 test/build/*
 AE2223.code-workspace
 test/*
+build/*
+e_functions.cp37-win_amd64.pyd
+e_functions.c
+e_functions.html
