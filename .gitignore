@@ -1,8 +1,9 @@
 Data/*
 .vscode/*
-__pycache__/general_functions.cpython-36.pyc
-AE2223.code-workspace
-__pycache__/divergence.cpython-36.pyc
-__pycache__/e_functions.cpython-36.pyc
+__pycache__/*
 Div50.png
 test.tex
+test/__pycache__/*
+test/build/*
+AE2223.code-workspace
+test/*

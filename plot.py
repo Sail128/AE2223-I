@@ -13,6 +13,7 @@ linestyles = ["b-", "bs-", "bo-", "b^-", "b*-",
               "m-", "ms-", "mo-", "m^-", "m*-", ]
 
 # TODO: Rewrite for the selected plots possibilly resturcture this file
+# Not sure if this file is even necessary
 
 
 def main():

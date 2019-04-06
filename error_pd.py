@@ -9,6 +9,7 @@ from divergence import divergence
 from e_functions import *
 
 Testing = True
+TestMultithread = False
 Plotting = False
 
 def getFileList(parent_folder: str):
@@ -38,7 +39,7 @@ def getFileList(parent_folder: str):
 
 def L2error(setKey: str):
     """
-    calculates the L2 error for a given result.
+    calculates the L2 error for a given expermient.
     https://www.rocq.inria.fr/modulef/Doc/GB/Guide6-10/node21.html
 
     Arguments:
@@ -102,19 +103,20 @@ def L2error(setKey: str):
     Zero_error = divu-f_e
     l2divu_f = np.linalg.norm(Zero_error,ord=2)
     x,y = Zero_error.shape
-    f=20 #croppingfactor what fraction to remove
+
+    f=20 #croppingfactor what fraction to remove this is due to high erros on the boundry 
     dif_crop = Zero_error[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
     l2divu_f_cropped = np.linalg.norm(dif_crop,ord=2)
     # x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
     # y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+
+    #Debugging code only used during debugging
     if Plotting:
         print(np.sum(Zero_error))
         print(l2divu_f)
         print(l2divu_f_cropped)
         # print(divu)
         # print(f_e)
-    
-    if Plotting:
         from matplotlib import pyplot as plt
         import matplotlib.cm as cm
         fig1 = plt.figure()
@@ -186,21 +188,6 @@ def executeParallel(inputs, threadFunction, threads=8):
     result.reset_index(drop=True, inplace=True)
     return result
 
-
-def sortfunction(x):
-    """small function to be able to sort the list in order
-
-    Arguments:
-        x {[type]} -- value to sort
-
-    Returns:
-        [type] -- sorting key
-    """
-    if(x[1] < 10):
-        y = "0"+str(x[1])
-    return float(str(x[0])+"." + y[3])
-
-
 def main(C):
     # Define the parent directory of the data to be processed.
     # Assumed structure is: parent_dir: exp_1,exp_2,...,exp_N (each containg the experiment files)
@@ -223,6 +210,7 @@ def main(C):
         results.to_csv(
             "{}/{}_errors_{}.dat".format(save_dir, exp, C), index=False)
 
+# Test code for debugging purposes
 def test(C):
     parent_dir = "Data/{}".format(C)
     save_dir = "test"
@@ -230,7 +218,9 @@ def test(C):
     FileList = getFileList(parent_dir)
     experiments = list(FileList.keys()) # remove slice to get full files
     print(experiments)
-    if input("test multithread y/n: ") == "y":
+    if TestMultithread:
+        global Plotting
+        Plotting = False
         for exp in experiments[0:2]:
             # generate the map of inputs for calculating the error
             input_map = list(map(
@@ -242,8 +232,6 @@ def test(C):
             # write to file
             print(results.to_csv(index=False))
     else:
-        global Plotting
-        Plotting=True
         #print(L2error("{}/{}/{}".format(parent_dir, experiments[0], FileList[experiments[0]][0])))
         print(L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_7_N_10")))
 
