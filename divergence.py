@@ -20,7 +20,7 @@ def test():
     from matplotlib import pyplot as plt
     import matplotlib.cm as cm
     from e_functions import phi_exact,u_exact_x,u_exact_y,f_exact,divu_exact
-    N = 1000
+    N = 200
     xrange = np.linspace(-1., 1., N)
     yrange = np.linspace(-1., 1., N)
     xs, ys = np.meshgrid(xrange, yrange, indexing='ij', sparse=False)

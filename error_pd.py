@@ -145,6 +145,12 @@ def L2error(setKey: str):
         ax4.set_title("f exact")
         map4 = ax4.contourf(xs, ys, f_e, 50, cmap=cm.plasma)
         fig4.colorbar(map4)
+
+        fig3 = plt.figure()
+        ax3 = fig3.add_subplot(111)
+        ax3.set_title("phi")
+        map3 = ax3.contourf(xs, ys, phi, 50, cmap=cm.plasma)
+        fig3.colorbar(map3)
         plt.show()
 
     return [    K, N, h, 
@@ -239,7 +245,7 @@ def test(C):
         global Plotting
         Plotting=True
         #print(L2error("{}/{}/{}".format(parent_dir, experiments[0], FileList[experiments[0]][0])))
-        print(L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_10_N_10")))
+        print(L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_7_N_10")))
 
 if __name__ == "__main__":
     if Testing:

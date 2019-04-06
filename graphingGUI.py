@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
+import matplotlib2tikz as mattikz
 
 graphs = []
 
@@ -75,7 +76,7 @@ questions = [
         'type': 'input',
         'name': 'series',
         'message': 'What K to plot (p,n-m): ',
-        'default': '1-5',
+        'default': '1,5,15',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'N'
     },
@@ -99,7 +100,7 @@ questions = [
         'type': 'input',
         'name': 'range',
         'message': 'What N range to plot (n-m): ',
-        'default': '2-15',
+        'default': '2-20',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'N'
     },
@@ -115,10 +116,17 @@ questions = [
         'message': 'y-label: ',
         'default': '$L_{2}-error$'
     },
+    {
+        'type': 'input',
+        'name': 'savefile',
+        'message': 'filename to save: ',
+        'default': ''
+    },
 ]
 
-markers = [".", "o", "v", "^", "1", "2",
+markers = ["o", "v", "^", "1", "2",
            "s", "p", "P", "h", "+", "x", "d", "D"]
+colors = ["r", "g", "b", "c", "m", "k"]
 
 
 def genTitle(colname):
@@ -169,18 +177,27 @@ def plot(data, selection):
     print(lines)
     # plot layout and axis setup
     fig, ax = plt.subplots(figsize=(10, 7))
+    i = 0
     for item in selection['datasets']:
         df = data[item]
         dfName = " ".join(item.split("_")[0:2])
         c = ".".join(item.split("_")[3:]).replace("c", "").replace("C", "")
+        j = 0
         for line in lines:
             df[(df[series] == line)].plot(
                 x=selection["x-axis"],
                 y=selection["y-axis"],
                 ax=ax,
                 label="{} c={} ({}={})".format(dfName, c, series, line),
-                marker=np.random.choice(markers)
+                marker=markers[i],
+                markerfacecolor=colors[j % len(colors)],
+                markeredgecolor="k",
+                markeredgewidth=0.5,
+                linewidth=0.5,
+                color=colors[j % len(colors)]
             )
+            j += 1
+        i += 1
     x_range = selection['range'].split("-")
     if selection["x-axis"] != "h":
         plt.xlim(int(x_range[0]), int(x_range[1]))
@@ -191,11 +208,14 @@ def plot(data, selection):
     plt.grid()
     plt.title(genTitle(selection["y-axis"]))
     fig.tight_layout()
+    if selection["savefile"] != "":
+        mattikz.save(selection["savefile"])
     plt.show()
+    plt.close()
 
 
 def main():
-    parent_dir = "test"
+    parent_dir = "error_div"
     infiles = []
     datapanel = {}
     for file in os.listdir(parent_dir):
@@ -205,6 +225,9 @@ def main():
                 "{}/{}".format(parent_dir, file))
 
     print(infiles)
+    if len(infiles) == 0:
+        print("empty directory set")
+        return 0
     data = pd.Panel(data=datapanel)
 
     print(data.shape)
@@ -232,7 +255,9 @@ def main():
         }, ])
         if not qexit['continue']:
             running = False
-            pprint(graphs)#printing the graphs to be made used for better graphing
+            # printing the graphs to be made used for better graphing
+            pprint(graphs)
+
 
 if __name__ == "__main__":
     main()
