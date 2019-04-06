@@ -168,21 +168,25 @@ def test(C):
             print(results.to_csv(index=False))
     else:
         #print(L2error("{}/{}/{}".format(parent_dir, experiments[0], FileList[experiments[0]][0])))
+        n = 10
         pure = []
         comp = []
-        for i in range(5):
+        pstart = time.time_ns()
+        for i in range(n):
             start = time.time_ns()
             error = L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_7_N_10"))
             end = time.time_ns()
             pure.append(end-start)
-            #print(L2error("{}/{}/{}".format(parent_dir, experiments[0], FileList[experiments[0]][0])))
+        pend=time.time_ns()
+        lstart=time.time_ns()
+        for i in range(n):
             start = time.time_ns()
             error = tl2.L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_7_N_10"))
             end = time.time_ns()
             comp.append(end-start)
-            
-        print( "python: {} calculated in: {}s".format(error, (sum(pure)/len(pure))*(10**-9)))
-        print( "build: {} calculated in: {}s".format(error, (sum(comp)/len(comp))*(10**-9)))
+        lend=time.time_ns()
+        print( "python: {} calculated in: {}s per call and {}s overall".format(error, (sum(pure)/len(pure))*(10**-9),(pend-pstart)*(10**-9)))
+        print( "build: {} calculated in: {}s per call and {}s overall".format(error, (sum(comp)/len(comp))*(10**-9),(lend-lstart)*(10**-9)))
 
 
 if __name__ == "__main__":

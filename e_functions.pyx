@@ -1,7 +1,8 @@
 # import numpy as np
-from math import sin, cos, pi
+from libc.math cimport sin, cos, pi
+#from math import sin, cos, pi
 
-def phi_exact(x: float, y: float):
+cpdef double phi_exact(double x, double y):
     """calculates the exact potential
 
     Arguments:
@@ -11,8 +12,7 @@ def phi_exact(x: float, y: float):
     Returns:
         float -- potential
     """
-    phi_exact = sin(2*pi*x) * sin(2*pi*y)
-    return phi_exact
+    return sin(2*pi*x) * sin(2*pi*y)
 
 
 def u_exact_calc(x: float, y: float):
@@ -30,7 +30,7 @@ def u_exact_calc(x: float, y: float):
     return u_exact_i, u_exact_j
 
 
-def u_exact_x(x: float, y: float):
+cpdef double u_exact_x(double x, double y):
     return 2*pi * cos(2*pi*x) * sin(2*pi*y)
 
 
@@ -38,7 +38,7 @@ def dux_dx(x: float, y: float):
     return -4*pi*pi*sin(2*pi*x) * sin(2*pi*y)
 
 
-def u_exact_y(x: float, y: float):
+cpdef double u_exact_y(double x, double y):
     return 2*pi * sin(2*pi*x) * cos(2*pi*y)
 
 
@@ -50,5 +50,5 @@ def divu_exact(x: float, y: float):
     return dux_dx(x, y)+duy_dy(x, y)
 
 
-def f_exact(x: float, y: float):
+cpdef double f_exact(double x, double y):
     return -8*pi * pi * sin(2*pi*x) * sin(2*pi*y)
