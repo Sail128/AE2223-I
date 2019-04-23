@@ -11,3 +11,11 @@ build/*
 e_functions.cp37-win_amd64.pyd
 e_functions.c
 e_functions.html
+U_c0.tex
+phi_c3_Plot.tex
+test_error/primal_primal_errors_C0_3.dat
+test_error/primal_dual_errors_C0_0.dat
+test_error/primal_dual_errors_C0_3.dat
+test_error/primal_gauss_errors_C0_0.dat
+test_error/primal_gauss_errors_C0_3.dat
+test_error/primal_primal_errors_C0_0.dat

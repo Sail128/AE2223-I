@@ -8,7 +8,7 @@ import pandas as pd
 from divergence import divergence
 from e_functions import *
 
-Testing = True
+Testing = False
 TestMultithread = False
 Plotting = False
 
@@ -67,8 +67,7 @@ def L2error(setKey: str):
         w_h = np.ones(xs.shape)
 
     # calculate the error and norm of the error for Phi both the L1 and L2 norm and relative norm
-    phi_e = np.vectorize(
-        phi_exact)(xs, ys)
+    phi_e = np.vectorize(phi_exact)(xs, ys)
     phi_error = phi_e-phi
 
     l2phi = np.sqrt(np.sum(w_h*phi_error*phi_error))
@@ -110,51 +109,6 @@ def L2error(setKey: str):
     # x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
     # y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
 
-    #Debugging code only used during debugging
-    if Plotting:
-        print(np.sum(Zero_error))
-        print(l2divu_f)
-        print(l2divu_f_cropped)
-        # print(divu)
-        # print(f_e)
-        from matplotlib import pyplot as plt
-        import matplotlib.cm as cm
-        fig1 = plt.figure()
-        ax1 = fig1.add_subplot(111)
-        ax1.set_title("divergence of u")
-        map1 = ax1.contourf(xs, ys, divu, 50, cmap=cm.plasma)
-        fig1.colorbar(map1)
-        ax1.contour(xs, ys, divu, 10, colors='k',
-                    linewidths=1, linestyles='solid')
-        # ax1.quiver(xs, ys, ux, uy)
-
-        fig2 = plt.figure()
-        ax2 = fig2.add_subplot(111)
-        ax2.set_title("divu-f")
-        map2 = ax2.contourf(xs, ys, Zero_error, 50, cmap=cm.plasma)
-        fig2.colorbar(map2)
-
-        fig5 = plt.figure()
-        ax5 = fig5.add_subplot(111)
-        ax5.set_title("divu-f cropped")
-        x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
-        y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
-        map5 = ax5.contourf(x_crop, y_crop, dif_crop, 50, cmap=cm.plasma)
-        fig5.colorbar(map5)
-
-        fig4 = plt.figure()
-        ax4 = fig4.add_subplot(111)
-        ax4.set_title("f exact")
-        map4 = ax4.contourf(xs, ys, f_e, 50, cmap=cm.plasma)
-        fig4.colorbar(map4)
-
-        fig3 = plt.figure()
-        ax3 = fig3.add_subplot(111)
-        ax3.set_title("phi")
-        map3 = ax3.contourf(xs, ys, phi, 50, cmap=cm.plasma)
-        fig3.colorbar(map3)
-        plt.show()
-
     return [    K, N, h, 
                 l2phi, relL2phi,
                 np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2),
@@ -192,7 +146,7 @@ def main(C):
     # Define the parent directory of the data to be processed.
     # Assumed structure is: parent_dir: exp_1,exp_2,...,exp_N (each containg the experiment files)
     parent_dir = "Data/{}".format(C)
-    save_dir = "test"
+    save_dir = "test_error"
     # Get the list of experiments for each of the types as a dict with the keys being the experiment names
     FileList = getFileList(parent_dir)
     print(FileList.keys())

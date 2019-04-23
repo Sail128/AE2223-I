@@ -13,7 +13,6 @@ import matplotlib2tikz as mattikz
 
 graphs = []
 
-
 class checkboxValidator(Validator):
     def validate(self, document):
         ok = len(document) != 0
@@ -184,6 +183,7 @@ def plot(data, selection):
         c = ".".join(item.split("_")[3:]).replace("c", "").replace("C", "")
         j = 0
         for line in lines:
+            # print((df[series] == line))
             df[(df[series] == line)].plot(
                 x=selection["x-axis"],
                 y=selection["y-axis"],
