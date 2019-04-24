@@ -5,6 +5,8 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from general_functions import general_plotter as gp
 
+import graphingGUI as gg
+
 
 linestyles = ["b-", "bs-", "bo-", "b^-", "b*-",
               "r-", "rs-", "ro-", "r^-", "r*-",
@@ -27,36 +29,22 @@ def main():
                 "{}/{}".format(parent_dir, file))
 
     print(infiles)
+    if len(infiles) == 0:
+        print("empty directory set")
+        return 0
     data = pd.Panel(data=datapanel)
-    print(data.shape)
-    print(list(data.items))
 
-    # plotting the first plot
-    fig1, ax1 = plt.subplots()
-    # 'primal_dual_errors_C0_0',
-    # 'primal_gauss_errors_C0_0',
-    # 'primal_primal_errors_C0_0'
-    sets = ['primal_dual_errors_C0_0',
-            'primal_gauss_errors_C0_0',
-            'primal_primal_errors_C0_0']
-    setmarks = ["s", "^", "o"]
-    markers = ["rv-","gv-","bv-",
-                "r^-", "g^-","b^-",
-                "ro-","go-","bo-"]
-    Ks = [1, 5, 15]
-    colors = ["r", "g", "b"]
-    for i in range(3):
-        for j in range(3):
-            data[sets[i]][(data[sets[i]]["K"] == Ks[j])].plot(
-                x="N",
-                y="l2phi",
-                ax=ax1,
-                label="{}, K {}".format(sets[i],Ks[i]),
-                marker=setmarks[i],
-                color=colors[j]
-                )
-    plt.legend()
-    plt.show()
+    print(data.shape)
+
+    running = True
+    while(running):
+        answers = prompt(questions)  # , style=custom_style_2)
+        if len(answers['datasets']) == 0:
+            pprint("Please select atleast one dataset")
+            continue
+        pprint(answers)
+        graphs.append(answers)
+        plot(data, answers)
 
 
 if __name__ == "__main__":
