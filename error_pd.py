@@ -53,8 +53,6 @@ def L2error(setKey: str):
     K = int(key[1])
     N = int(key[3])
     h = 2/K
-    if Plotting:
-        print(setKey)
     # Get all the related files to start processing
     xs = np.genfromtxt("{}_xif.dat".format(setKey))
     ys = np.genfromtxt("{}_etaf.dat".format(setKey))
@@ -67,7 +65,8 @@ def L2error(setKey: str):
         w_h = np.ones(xs.shape)
 
     # calculate the error and norm of the error for Phi both the L1 and L2 norm and relative norm
-    phi_e = np.vectorize(phi_exact)(xs, ys)
+    phi_e = np.vectorize(
+        phi_exact)(xs, ys)
     phi_error = phi_e-phi
 
     l2phi = np.sqrt(np.sum(w_h*phi_error*phi_error))
@@ -77,41 +76,31 @@ def L2error(setKey: str):
     # relL1phi = np.sum(w_h*np.abs(phi_error))/np.sum(np.abs(phi_e))
 
     # Calculate the error and norm for U
-    ux_exact = np.vectorize(u_exact_x)(xs, ys)
-    uy_exact = np.vectorize(u_exact_y)(xs, ys)
-    ux_error = ux_exact - ux
-    uy_error = uy_exact - uy
+    ue = np.vectorize(u_abs)(xs,ys)
+    u = np.sqrt(ux*ux+uy*uy)
+    u_error = ue-u
+    l2u = np.sqrt(np.sum(w_h*u_error*u_error))
+    relL2u = np.sqrt(np.sum(w_h*u_error*u_error)) / \
+        np.linalg.norm(ue, ord=2)
 
-    l2ux = np.sqrt(np.sum(w_h*ux_error*ux_error))
-    relL2ux = np.sqrt(np.sum(w_h*ux_error*ux_error)) / \
-        np.linalg.norm(ux_exact, ord=2)
-    # l1ux = np.sum(w_h*np.abs(ux_error))
-    # relL1ux = np.sum(w_h*np.abs(ux_error))/np.sum(np.abs(ux_exact))
+    # TODO Calculate the error and norm for div(u)-f_exact. should be 0
+    # dx = (np.abs(xs[0, 0]-xs[-1, -1]))/(xs.shape[0])
+    # dy = (np.abs(ys[0, 0]-ys[-1, -1]))/(ys.shape[1])
+    # f_e = np.vectorize(f_exact)(xs,ys)
+    #divu = divergence([ux, uy], di=[dx,dy])
+    #Zero_error = divu-f_e
+    l2divu_f = 0.0#np.linalg.norm(Zero_error,ord=2)
+    #x,y = Zero_error.shape
 
-    l2uy = np.sqrt(np.sum(w_h*uy_error*uy_error))
-    relL2uy = np.sqrt(np.sum(w_h*uy_error*uy_error)) / \
-        np.linalg.norm(uy_exact, ord=2)
-    # l1uy = np.sum(w_h*np.abs(uy_error))
-    # relL1uy = np.sum(w_h*np.abs(uy_error))/np.sum(np.abs(uy_exact))
-
-    # Calculate the error and norm for div(u)-f_exact. should be 0
-    dx = (np.abs(xs[0, 0]-xs[-1, -1]))/(xs.shape[0])
-    dy = (np.abs(ys[0, 0]-ys[-1, -1]))/(ys.shape[1])
-    f_e = np.vectorize(f_exact)(xs,ys)
-    divu = divergence([ux, uy], di=[dx,dy])
-    Zero_error = divu-f_e
-    l2divu_f = np.linalg.norm(Zero_error,ord=2)
-    x,y = Zero_error.shape
-
-    f=20 #croppingfactor what fraction to remove this is due to high erros on the boundry 
-    dif_crop = Zero_error[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
-    l2divu_f_cropped = np.linalg.norm(dif_crop,ord=2)
+    #f=20 #croppingfactor what fraction to remove this is due to high erros on the boundry 
+    #dif_crop = Zero_error[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+    #l2divu_f_cropped = np.linalg.norm(dif_crop,ord=2)
     # x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
     # y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
 
     return [    K, N, h, 
                 l2phi, relL2phi,
-                np.sqrt(l2ux**2+l2uy**2), np.sqrt(relL2ux**2+relL2uy**2),
+                l2u, relL2u,
                 l2divu_f]
 
 

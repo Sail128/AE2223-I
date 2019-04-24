@@ -17,7 +17,7 @@ import warnings
 from divergence import divergence
 from test.test.e_functions import *
 
-multiThreaded = True
+multiThreaded = False
 Plotting = False
 
 def L2error(setKey: str):
@@ -59,21 +59,12 @@ def L2error(setKey: str):
     # relL1phi = np.sum(w_h*np.abs(phi_error))/np.sum(np.abs(phi_e))
 
     # Calculate the error and norm for U
-    ux_exact = np.vectorize(u_exact_x)(xs, ys)
-    uy_exact = np.vectorize(u_exact_y)(xs, ys)
-    ux_error = ux_exact - ux
-    uy_error = uy_exact - uy
-
-    l2ux = np.sqrt(np.sum(w_h*ux_error*ux_error))
-    relL2ux = np.sqrt(np.sum(w_h*ux_error*ux_error)) / \
-        np.linalg.norm(ux_exact, ord=2)
-
-    l2uy = np.sqrt(np.sum(w_h*uy_error*uy_error))
-    relL2uy = np.sqrt(np.sum(w_h*uy_error*uy_error)) / \
-        np.linalg.norm(uy_exact, ord=2)
-
-    l2u = np.sqrt(l2ux**2+l2uy**2)
-    relL2u = np.sqrt(relL2ux**2+relL2uy**2)
+    ue = np.vectorize(u_abs)(xs,ys)
+    u = np.sqrt(ux*ux+uy*uy)
+    u_error = ue-u
+    l2u = np.sqrt(np.sum(w_h*u_error*u_error))
+    relL2u = np.sqrt(np.sum(w_h*u_error*u_error)) / \
+        np.linalg.norm(ue, ord=2)
 
     # Calculate the error and norm for div(u)-f_exact. should be 0
     dx = (np.abs(xs[0, 0]-xs[-1, -1]))/(xs.shape[0])
@@ -225,14 +216,14 @@ def test(C):
             pure.append(end-start)
         pend=time.time_ns()
         lstart=time.time_ns()
-        for i in range(n):
+        for i in range(1):
             start = time.time_ns()
-            error = tl2.L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_7_N_10"))
+            error1 = tl2.L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_7_N_10"))
             end = time.time_ns()
             comp.append(end-start)
         lend=time.time_ns()
         print( "python: {} calculated in: {}s per call and {}s overall".format(error, (sum(pure)/len(pure))*(10**-9),(pend-pstart)*(10**-9)))
-        print( "build: {} calculated in: {}s per call and {}s overall".format(error, (sum(comp)/len(comp))*(10**-9),(lend-lstart)*(10**-9)))
+        print( "build: {} calculated in: {}s per call and {}s overall".format(error1, (sum(comp)/len(comp))*(10**-9),(lend-lstart)*(10**-9)))
 
 
 if __name__ == "__main__":

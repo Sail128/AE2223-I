@@ -1,5 +1,5 @@
 # import numpy as np
-from libc.math cimport sin, cos, pi
+from libc.math cimport sin, cos, pi, sqrt
 #from math import sin, cos, pi
 
 cpdef double phi_exact(double x, double y):
@@ -29,6 +29,8 @@ def u_exact_calc(x: float, y: float):
     u_exact_j = 2*pi * sin(2*pi*x) * cos(2*pi*y)
     return u_exact_i, u_exact_j
 
+cpdef double u_abs(x:float, y:float):
+    return sqrt((2*pi * cos(2*pi*x) * sin(2*pi*y))**2+(2*pi * sin(2*pi*x) * cos(2*pi*y))**2)
 
 cpdef double u_exact_x(double x, double y):
     return 2*pi * cos(2*pi*x) * sin(2*pi*y)
