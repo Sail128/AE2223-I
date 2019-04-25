@@ -59,7 +59,7 @@ questions = [
         'type': 'input',
         'name': 'series',
         'message': 'What N to plot (p,n-m): ',
-        'default': '2-5',
+        'default': '2,4,6',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'K'
     },
@@ -67,7 +67,7 @@ questions = [
         'type': 'input',
         'name': 'series',
         'message': 'What N to plot (p,n-m): ',
-        'default': '2-5',
+        'default': '2,4,6',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'h'
     },
@@ -83,7 +83,7 @@ questions = [
         'type': 'input',
         'name': 'range',
         'message': 'What K range to plot (n-m): ',
-        'default': '1-15',
+        'default': '1-20',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'K'
     },
@@ -91,7 +91,7 @@ questions = [
         'type': 'input',
         'name': 'range',
         'message': 'What K range to plot (n-m): ',
-        'default': '1-15',
+        'default': '1-20',
         'validate': RangeValidator,
         'when': lambda answers: answers['x-axis'] == 'h'
     },
@@ -114,6 +114,12 @@ questions = [
         'name': 'y-label',
         'message': 'y-label: ',
         'default': '$L_{2}-error$'
+    },
+    {
+        'type': 'confirm',
+        'name': 'x-log',
+        'message': 'x-log? ',
+        'default': False
     },
     {
         'type': 'input',
@@ -204,6 +210,8 @@ def plot(data, selection):
     plt.rc('text', usetex=selection['use-tex'])
     plt.ylabel(selection['y-label'])
     plt.yscale("log")
+    if selection['x-log']==True:
+        plt.xscale("log")
     plt.legend()
     plt.grid()
     plt.title(genTitle(selection["y-axis"]))
