@@ -17,7 +17,7 @@ import warnings
 from divergence import divergence
 from test.test.e_functions import *
 
-multiThreaded = False
+multiThreaded = True
 Plotting = False
 
 def L2error(setKey: str):
@@ -42,6 +42,14 @@ def L2error(setKey: str):
     ux = np.genfromtxt("{}_ux.dat".format(setKey))
     uy = np.genfromtxt("{}_uy.dat".format(setKey))
     phi = np.genfromtxt("{}_phi.dat".format(setKey))
+    # TODO: divq
+    # print("{}/cont_data/K_{}_N_{}_c_0{}_.dat".format("/".join(setKey.split("/")[0:-1]),K,N,setKey.split("/")[1][-1]))
+    try:
+        divq = np.genfromtxt("{}/cont_data/K_{}_N_{}_c_0{}_divq.dat".format("/".join(setKey.split("/")[0:-1]),K,N,setKey.split("/")[1][-1]))
+    except OSError as e:
+        print("error: ", "{}/cont_data/K_{}_N_{}_c_0{}_divq.dat".format("/".join(setKey.split("/")[0:-1]),K,N,setKey.split("/")[1][-1]))
+        divq = np.zeros(xs.shape)
+
     try:
         w_h = np.genfromtxt("{}_w_h.dat".format(setKey))
     except OSError as e:
@@ -67,12 +75,12 @@ def L2error(setKey: str):
         np.linalg.norm(ue, ord=2)
 
     # Calculate the error and norm for div(u)-f_exact. should be 0
-    dx = (np.abs(xs[0, 0]-xs[-1, -1]))/(xs.shape[0])
-    dy = (np.abs(ys[0, 0]-ys[-1, -1]))/(ys.shape[1])
-    f_e = np.vectorize(f_exact)(xs,ys)
+    # dx = (np.abs(xs[0, 0]-xs[-1, -1]))/(xs.shape[0])
+    # dy = (np.abs(ys[0, 0]-ys[-1, -1]))/(ys.shape[1])
+    # f_e = np.vectorize(f_exact)(xs,ys)
     #divu = divergence([ux, uy], di=[dx,dy])
     #Zero_error = divu-f_e
-    l2divu_f = 0.0#np.linalg.norm(Zero_error,ord=2)
+    l2divu_f = np.sqrt(np.sum(w_h*divq*divq))
     #x,y = Zero_error.shape
 
     #f=20 #croppingfactor what fraction to remove this is due to high erros on the boundry 
@@ -83,9 +91,8 @@ def L2error(setKey: str):
 
     #Debugging code only used during debugging
     if Plotting:
-        print(np.sum(Zero_error))
+        print(np.sum(divq))
         print(l2divu_f)
-        print(l2divu_f_cropped)
         # print(divu)
         # print(f_e)
         from matplotlib import pyplot as plt
@@ -93,25 +100,25 @@ def L2error(setKey: str):
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
         ax1.set_title("divergence of u")
-        map1 = ax1.contourf(xs, ys, divu, 50, cmap=cm.plasma)
+        map1 = ax1.contourf(xs, ys, divq, 50, cmap=cm.plasma)
         fig1.colorbar(map1)
-        ax1.contour(xs, ys, divu, 10, colors='k',
+        ax1.contour(xs, ys, divq, 10, colors='k',
                     linewidths=1, linestyles='solid')
         # ax1.quiver(xs, ys, ux, uy)
 
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
         ax2.set_title("divu-f")
-        map2 = ax2.contourf(xs, ys, Zero_error, 50, cmap=cm.plasma)
+        map2 = ax2.contourf(xs, ys, divq, 50, cmap=cm.plasma)
         fig2.colorbar(map2)
 
-        fig5 = plt.figure()
-        ax5 = fig5.add_subplot(111)
-        ax5.set_title("divu-f cropped")
-        x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
-        y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
-        map5 = ax5.contourf(x_crop, y_crop, dif_crop, 50, cmap=cm.plasma)
-        fig5.colorbar(map5)
+        # fig5 = plt.figure()
+        # ax5 = fig5.add_subplot(111)
+        # ax5.set_title("divu-f cropped")
+        # x_crop = xs[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+        # y_crop = ys[:-int(y/f),:-int(x/f)][int(y/f):][...,int(x/f):]
+        # map5 = ax5.contourf(x_crop, y_crop, dif_crop, 50, cmap=cm.plasma)
+        # fig5.colorbar(map5)
 
         fig4 = plt.figure()
         ax4 = fig4.add_subplot(111)
@@ -193,7 +200,7 @@ def test(C):
     if multiThreaded:
         global Plotting
         Plotting = False
-        for exp in experiments[0:2]:
+        for exp in experiments[2:3]:
             # generate the map of inputs for calculating the error
             input_map = list(map(
                 (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp][0:15]))  # remove slice to get everything
@@ -205,7 +212,10 @@ def test(C):
             print(results.to_csv(index=False))
     else:
         #print(L2error("{}/{}/{}".format(parent_dir, experiments[0], FileList[experiments[0]][0])))
-        n = 10
+        if Plotting:
+            error = L2error("{}/{}/{}".format(parent_dir, experiments[0], "K_7_N_10"))
+            Plotting = False
+        n = 5
         pure = []
         comp = []
         pstart = time.time_ns()

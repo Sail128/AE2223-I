@@ -156,6 +156,8 @@ def genTitle(colname):
         return "$L_{1}-error$ for $u$"
     elif colname == "relL1u":
         return "relative $L_{1}-error$ for $u$"
+    elif colname == "l2divu_f":
+        return "$L_{1}-error$ for div$u$-f"
     else:
         return "Lol this shouldn't happen"
 
@@ -223,7 +225,7 @@ def plot(data, selection):
 
 
 def main():
-    parent_dir = "error_div"
+    parent_dir = "test_error"
     infiles = []
     datapanel = {}
     for file in os.listdir(parent_dir):
