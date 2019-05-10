@@ -17,4 +17,4 @@ The results of that analysis is also contained in this repository.
 1. run error_pd.py to generate the L2-error analysis for the data given in that directory.
 1. Set the correct path to the generated analysis files in graphingGui.py
 1. run graphingGUI.py to try out various combinations of parameters to get the best graphs.
-1. 1. add a savefile name to output a latex plot for more customization.
+    1. add a savefile name to output a latex plot for more customization.
