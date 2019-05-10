@@ -8,7 +8,7 @@ import pandas as pd
 from divergence import divergence
 from e_functions import *
 
-Testing = True
+Testing = False
 TestMultithread = False
 Plotting = False
 
@@ -159,13 +159,13 @@ def test(C):
         # Define the parent directory of the data to be processed.
     # Assumed structure is: parent_dir: exp_1,exp_2,...,exp_N (each containg the experiment files)
     parent_dir = "Data/{}".format(C)
-    save_dir = "test_error"
+    save_dir = "errors"
     # Get the list of experiments for each of the types as a dict with the keys being the experiment names
     FileList = getFileList(parent_dir)
     print(FileList.keys())
     experiments = list(FileList.keys())  # remove slice to get full files
     print(experiments)
-    for exp in experiments[2:3]:
+    for exp in experiments[0:1]:
         # generate the map of inputs for calculating the error
         input_map = list(map(
             (lambda x: "{}/{}/{}".format(parent_dir, exp, x)), FileList[exp]))  # remove slice to get everything

@@ -225,7 +225,7 @@ def plot(data, selection):
 
 
 def main():
-    parent_dir = "test_error"
+    parent_dir = "errors"
     infiles = []
     datapanel = {}
     for file in os.listdir(parent_dir):
